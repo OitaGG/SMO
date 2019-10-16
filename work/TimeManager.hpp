@@ -7,12 +7,19 @@ class TimeManager
 {
 public:
   TimeManager(int amount);
-  ~TimeManager();
 
-  void next();
+  void work();
   bool done();
+
+  int getCurrentTime();
+  void addNewTime(int t);
+  void sent(int i);
+  void created(int i);
+  void refused(int i);
+
+  ~TimeManager() = default;
 private:
-  int sourceAmount_;
+  int sourcesAmount_;
   int currentTime_;
 
   std::list<int> sent_;
@@ -20,6 +27,5 @@ private:
   std::list<int> time_;
   std::list<int> refused_;
 };
-
 
 #endif // !TIMEMANAGER_HPP

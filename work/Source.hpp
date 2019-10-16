@@ -1,29 +1,37 @@
 #ifndef SOURCE_HPP
 #define SOURCE_HPP
 
-#include "BaseElement.hpp"
+#include "Buffer.hpp"
 #include "TimeManager.hpp"
+#include <math.h>
+#include <iostream>
+#include <cmath>
 
-
-class Source: public BaseElement
+class Source
 {
 public:
-  Source(int n);
+  Source(TimeManager* timeManager, int N);
+  
+  void generate();
+  void send(int i);
+
+  int fxRule();
+  void set(int i);
+  void free(int i);
+  void work();
+  void check();
+  void getTime();
+  bool done();
+  
   ~Source();
-
-  void init(BaseElement * buffer) override;
-  void get(int i) override;
-  void send(int i) override;
-  void getInfo() override;
-
 private:
+  TimeManager* timeManager;
+  Buffer* buffer_;
+
   int sourceNumber_;
-  int * sourcesArray_;
+  int* sourcesArray_;
   int amount_;
   int time_;
-
-  TimeManager * timeManager;
-  BaseElement * buffer;
 };
 
 #endif // !SOURCE_HPP

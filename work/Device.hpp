@@ -1,24 +1,33 @@
 #ifndef DEVICE_HPP
 #define DEVICE_HPP
 
-#include "BaseElement.hpp"
+#include "Buffer.hpp"
+#include "TimeManager.hpp"
+#include <math.h>
+#include <cmath>
+#include <iostream>
 
-class Device: public BaseElement
+class Device
 {
 public:
-  Device(/* args */);
-  ~Device();
+  Device(TimeManager* timeManager, int N);
 
-  void init(BaseElement * buffer) override;
-  void get(int i) override;
-  void send(int i) override;
-  void getInfo() override;
-  bool empty() override;
-  
-  void generate();
+  void work();
+  void get(int i);
+  int getFreePlaces();
+  void getTime();
+  void free();
+  int fxRule();
+  bool done();
 
+  ~Device();  
 private:
-  /* data */
+  TimeManager* timeManager_;
+  Buffer* buffer_;
+  int amount_;
+  int time_;
+  int* devicesArray_;
+  int* wait_;
 };
 
 

@@ -1,15 +1,26 @@
 #ifndef BUFFER_HPP
 #define BUFFER_HPP
 
-#include "BaseElement.hpp"
+#include "TimeManager.hpp"
+#include <list>
+#include <iostream>
 
-class Buffer: public BaseElement
+class Buffer
 {
 public:
-  Buffer(/* args */);
-  ~Buffer() = default;
+  Buffer(TimeManager* timeManager, int N);
+
+  void set(int i);
+  void get(int i);
+  bool isReady();
+  void force(int i);
+  bool isEmpty();
+
+  ~Buffer();
 private:
-  /* data */
+  int amount_;
+  std::list<int> bufferList_;
+  TimeManager* timeManager_;
 };
 
 #endif // !BUFFER_HPP
