@@ -11,12 +11,13 @@ public:
   Buffer(TimeManager* timeManager, int N);
 
   void set(int i);
-  void get(int i);
+  int get();
   bool isReady();
   void force(int i);
   bool isEmpty();
 
-  ~Buffer();
+
+  ~Buffer() = default;
 private:
   int amount_;
   std::list<int> bufferList_;

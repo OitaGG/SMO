@@ -2,6 +2,7 @@
 #define TIMEMANAGER_HPP
 
 #include <list>
+#include <iostream>
 
 class TimeManager
 {
@@ -11,20 +12,21 @@ public:
   void work();
   bool done();
 
-  int getCurrentTime();
-  void addNewTime(int t);
+  double getCurrentTime();
+  void addNewTime(double t);
   void sent(int i);
   void created(int i);
   void refused(int i);
+  void printInfo();
 
   ~TimeManager() = default;
 private:
   int sourcesAmount_;
-  int currentTime_;
+  double currentTime_;
 
   std::list<int> sent_;
   std::list<int> created_;
-  std::list<int> time_;
+  std::list<double> time_;
   std::list<int> refused_;
 };
 

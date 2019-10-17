@@ -10,17 +10,16 @@
 class Source
 {
 public:
-  Source(TimeManager* timeManager, int N);
+  Source(TimeManager* timeManager, Buffer* buffer, int N);
   
   void generate();
   void send(int i);
 
-  int fxRule();
+  double fxRule();
   void set(int i);
   void free(int i);
   void work();
   void check();
-  void getTime();
   bool done();
   
   ~Source();
@@ -29,9 +28,9 @@ private:
   Buffer* buffer_;
 
   int sourceNumber_;
-  int* sourcesArray_;
+  double* sourcesArray_;
   int amount_;
-  int time_;
+  double time_;
 };
 
 #endif // !SOURCE_HPP
