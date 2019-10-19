@@ -2,6 +2,7 @@
 #include "Buffer.hpp"
 #include "Source.hpp"
 #include "TimeManager.hpp"
+#include "StatManager.hpp"
 
 #include <ctime>
 
@@ -13,16 +14,17 @@ int main(int argc, char * argv[]) {
 	const int DeviceValue =	std::stoi(argv[3]);
 	const int L =	std::stoi(argv[4]);
 
-  TimeManager timeManager(L);
-  Buffer buffer(&timeManager, BufferValue);
-  Source source(&timeManager, &buffer, SourceValue);
-  Device device(&timeManager, &buffer, DeviceValue);
+  StatManager statManager(L);
+  TimeManager timeManager(L, &statManager);
+  Buffer buffer(&timeManager, &statManager, BufferValue);
+  Source source(&timeManager, &buffer, &statManager, SourceValue);
+  Device device(&timeManager, &buffer, &statManager, DeviceValue);
 
-  while (!timeManager.done()) {
+  while (!timeManager.done() || !source.done() || !buffer.isEmpty() || !device.done()) {
 		source.work();
 		device.work();
 		timeManager.work();
 	}
-  
+  statManager.printResult();
   return 0;
 }

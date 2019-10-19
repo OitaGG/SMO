@@ -1,19 +1,17 @@
 #include "Buffer.hpp"
 
-Buffer::Buffer(TimeManager* timeManager, int N) : timeManager_(timeManager), amount_(N) {
+Buffer::Buffer(TimeManager* timeManager, StatManager* statManager, int N) : timeManager_(timeManager), 
+statManager_(statManager), amount_(N) {
   bufferList_ = std::list<int>();
 }
 
 void Buffer::set(int i){
   bufferList_.push_front(i);
-  std::cout<<"##################"<<std::endl;  
-  std::cout<<"Buffer get from source: " << i <<std::endl;
-  std::cout<<"##################"<<std::endl;  
+  statManager_->bufferGetFromSource(i);
 }
 
 int Buffer::get(){
   int sizeBuff = amount_ - bufferList_.size();
-  std::cout<<"Size of buffer: "<<sizeBuff<<std::endl;
   if(bufferList_.size() > 0){
     int k = bufferList_.front();
     bufferList_.pop_front();
@@ -29,10 +27,7 @@ bool Buffer::isReady(){
 }
 
 void Buffer::force(int i){
-  std::cout<<"##################"<<std::endl;  
-  std::cout<<"Buffer get from source: " << i << " and forced it in place from source "<< bufferList_.back() <<std::endl;
-  std::cout<<"##################"<<std::endl;
-  timeManager_->refused(bufferList_.back());  
+  statManager_->bufferForced(i, bufferList_.back());
   bufferList_.pop_back();
   bufferList_.push_front(i);
 }

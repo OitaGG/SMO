@@ -3,6 +3,7 @@
 
 #include "Buffer.hpp"
 #include "TimeManager.hpp"
+#include "StatManager.hpp"
 #include <math.h>
 #include <iostream>
 #include <cmath>
@@ -10,7 +11,7 @@
 class Source
 {
 public:
-  Source(TimeManager* timeManager, Buffer* buffer, int N);
+  Source(TimeManager* timeManager, Buffer* buffer, StatManager* statManager, int N);
   
   void generate();
   void send(int i);
@@ -26,6 +27,7 @@ public:
 private:
   TimeManager* timeManager;
   Buffer* buffer_;
+  StatManager* statManager_;
 
   int sourceNumber_;
   double* sourcesArray_;

@@ -1,7 +1,7 @@
 #include "Source.hpp"
 
-Source::Source(TimeManager* timeManager, Buffer* buffer, int N) : timeManager(timeManager),
-  buffer_(buffer), amount_(N), time_(0.0) {
+Source::Source(TimeManager* timeManager, Buffer* buffer, StatManager* statManager, int N) : timeManager(timeManager),
+  buffer_(buffer), statManager_(statManager), amount_(N), time_(0.0) {
     sourcesArray_ = new double[amount_];
     for(size_t i = 0; i < amount_; i++){
       sourcesArray_[i] = -1;
@@ -13,10 +13,8 @@ void Source::generate(){
     if(timeManager->done())
       return;
     if(sourcesArray_[i] == -1){
-      
       sourcesArray_[i] = time_ + fxRule();
-      std::cout<<"Source " << i << " generate at "<< sourcesArray_[i]<<std::endl;
-      timeManager->created(i);
+      statManager_->sourceGenerate(i, sourcesArray_[i]);
       timeManager->addNewTime(sourcesArray_[i]);
     }
   } 
@@ -24,7 +22,7 @@ void Source::generate(){
 
 void Source::check(){
   for(size_t i = 0; i < amount_; i++){
-      std::cout<<"Source " << i <<": "<< sourcesArray_[i] << "->Checked" <<std::endl;
+      statManager_->sourceChecked(i);
     if(sourcesArray_[i] == time_){
       send(i);
       free(i);
@@ -34,15 +32,10 @@ void Source::check(){
 
 void Source::work(){
   time_ = timeManager->getCurrentTime();
-  std::cout<<"Current Time For Source : "<< time_ <<std::endl;
-  std::cout<<"******************"<<std::endl;  
   check();
   if(!timeManager->done()){
     generate();
   }
-  std::cout<<"Succesfully iteration for Source"<<std::endl;
-  std::cout<<"******************"<<std::endl;
-  std::cout<<std::endl;
 }
 
 double Source::fxRule(){

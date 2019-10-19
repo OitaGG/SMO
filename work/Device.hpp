@@ -3,6 +3,7 @@
 
 #include "Buffer.hpp"
 #include "TimeManager.hpp"
+#include "StatManager.hpp"
 #include <math.h>
 #include <cmath>
 #include <iostream>
@@ -10,7 +11,7 @@
 class Device
 {
 public:
-  Device(TimeManager* timeManager, Buffer* buffer, int N);
+  Device(TimeManager* timeManager, Buffer* buffer, StatManager* statManager, int N);
 
   void work();
   void get(int i);
@@ -25,6 +26,7 @@ public:
 private:
   TimeManager* timeManager_;
   Buffer* buffer_;
+  StatManager* statManager_;
   int amount_;
   double time_;
   int* devicesArray_;

@@ -2,13 +2,14 @@
 #define BUFFER_HPP
 
 #include "TimeManager.hpp"
+#include "StatManager.hpp"
 #include <list>
 #include <iostream>
 
 class Buffer
 {
 public:
-  Buffer(TimeManager* timeManager, int N);
+  Buffer(TimeManager* timeManager, StatManager* statManager, int N);
 
   void set(int i);
   int get();
@@ -22,6 +23,7 @@ private:
   int amount_;
   std::list<int> bufferList_;
   TimeManager* timeManager_;
+  StatManager* statManager_;
 };
 
 #endif // !BUFFER_HPP

@@ -1,7 +1,7 @@
 #include "Device.hpp"
 
-Device::Device(TimeManager* timeManager, Buffer* buffer, int N) : timeManager_(timeManager), 
-    buffer_(buffer), amount_(N), time_(0.0) {
+Device::Device(TimeManager* timeManager, Buffer* buffer, StatManager* statManager, int N) : timeManager_(timeManager), 
+    buffer_(buffer), statManager_(statManager), amount_(N), time_(0.0) {
     devicesArray_ = new int[amount_];
     wait_ = new double[amount_];
 
@@ -16,11 +16,10 @@ void Device::get(int i){
     int numS = buffer_->get();
     if(numS == -1)
       return;
-    std::cout<<"Buffer sent to device from Source: "<<numS<<std::endl;
-    timeManager_->sent(numS);
     int place = recievePlace();
     devicesArray_[place] = numS;
     wait_[place] = time_ + fxRule();
+    statManager_->deviceGetFromBuffer(i);
     timeManager_->addNewTime(wait_[place]);
     getFreePlaces();
   }
@@ -33,26 +32,20 @@ int Device::getFreePlaces(){
       count++;
     }
   }
-  std::cout<<"Free dev: "<<count<<std::endl;
   return count;
 }
 
 void Device::work(){
   time_ = timeManager_->getCurrentTime();
-  std::cout<<"Current Time For Device: "<< time_ <<std::endl;
-  std::cout<<"******************"<<std::endl;
-  free();//Освобождает готовое
+  free();
   int freePlaces = getFreePlaces();
-  get(freePlaces);//Смотрит, сколько можно взять и вставить в девайс
-  std::cout<<"Succesfully iteration for Device"<<std::endl;  
-  std::cout<<"******************"<<std::endl;
-  std::cout<<std::endl;
+  get(freePlaces);
 }
 
 void Device::free(){
   for (size_t i = 0; i < amount_; i++){
     if(wait_[i] == time_){
-      std::cout<<"Device done: "<<i<<"With time: "<<wait_[i]<<std::endl;
+      statManager_->deviceDone(i,wait_[i]);
       devicesArray_[i] = -1;
       wait_[i] = -1;
     }
@@ -71,7 +64,6 @@ int Device::recievePlace(){
       break;
     }
   }
-  std::cout<<"ANNA-LOH: "<< place <<std::endl;
   return place;
 }
 Device::~Device(){
