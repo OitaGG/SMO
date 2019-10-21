@@ -3,10 +3,12 @@
 Device::Device(TimeManager* timeManager, Buffer* buffer, StatManager* statManager, int N) : timeManager_(timeManager), 
     buffer_(buffer), statManager_(statManager), amount_(N), time_(0.0) {
     devicesArray_ = new int[amount_];
+    waitFor_ = new double[amount_];
     wait_ = new double[amount_];
 
     for(size_t i = 0; i < amount_; i++){
       devicesArray_[i] = -1;
+      waitFor_[i] = -1;
       wait_[i] = -1;
     }
 }
@@ -18,9 +20,12 @@ void Device::get(int i){
       return;
     int place = recievePlace();
     devicesArray_[place] = numS;
-    wait_[place] = time_ + fxRule();
-    statManager_->deviceGetFromBuffer(i);
-    timeManager_->addNewTime(wait_[place]);
+    double timeWait = fxRule();
+    std::cout<<"FxRule "<<timeWait<<std::endl;
+    waitFor_[place] = time_ + timeWait;
+    wait_[place] = timeWait;
+    statManager_->deviceGetFromBuffer(i, timeWait);
+    timeManager_->addNewTime(waitFor_[place]);
     getFreePlaces();
   }
 }
@@ -44,9 +49,10 @@ void Device::work(){
 
 void Device::free(){
   for (size_t i = 0; i < amount_; i++){
-    if(wait_[i] == time_){
+    if(waitFor_[i] == time_){
       statManager_->deviceDone(i,wait_[i]);
       devicesArray_[i] = -1;
+      waitFor_[i] = -1;
       wait_[i] = -1;
     }
   }
@@ -68,6 +74,7 @@ int Device::recievePlace(){
 }
 Device::~Device(){
   delete devicesArray_;
+  delete waitFor_;
   delete wait_;
 }
 

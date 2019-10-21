@@ -32,6 +32,7 @@ void Source::check(){
 
 void Source::work(){
   time_ = timeManager->getCurrentTime();
+  std::cout<<time_<<std::endl;
   check();
   if(!timeManager->done()){
     generate();

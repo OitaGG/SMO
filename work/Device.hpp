@@ -30,6 +30,7 @@ private:
   int amount_;
   double time_;
   int* devicesArray_;
+  double* waitFor_;
   double* wait_;
 };
 

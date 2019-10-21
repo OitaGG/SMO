@@ -14,7 +14,7 @@ int main(int argc, char * argv[]) {
 	const int DeviceValue =	std::stoi(argv[3]);
 	const int L =	std::stoi(argv[4]);
 
-  StatManager statManager(L);
+  StatManager statManager(L, SourceValue, DeviceValue);
   TimeManager timeManager(L, &statManager);
   Buffer buffer(&timeManager, &statManager, BufferValue);
   Source source(&timeManager, &buffer, &statManager, SourceValue);
