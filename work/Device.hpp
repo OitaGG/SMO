@@ -34,5 +34,4 @@ private:
   double* wait_;
 };
 
-
 #endif // !DEVICE_HPP

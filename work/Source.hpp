@@ -14,7 +14,7 @@ public:
   Source(TimeManager* timeManager, Buffer* buffer, StatManager* statManager, int N);
   
   void generate();
-  void send(int i);
+  void send(int i, double t);
 
   double fxRule();
   void set(int i);
@@ -29,10 +29,13 @@ private:
   Buffer* buffer_;
   StatManager* statManager_;
 
+  
   int sourceNumber_;
   double* sourcesArray_;
   int amount_;
   double time_;
+
+  double Lambda, Betta;
 };
 
 #endif // !SOURCE_HPP
