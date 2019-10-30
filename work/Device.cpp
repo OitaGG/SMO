@@ -1,7 +1,7 @@
 #include "Device.hpp"
 
 Device::Device(TimeManager* timeManager, Buffer* buffer, StatManager* statManager, int N) : timeManager_(timeManager), 
-    buffer_(buffer), statManager_(statManager), amount_(N), time_(0.0) {
+    buffer_(buffer), statManager_(statManager), amount_(N), time_(0.0), Lambda(1.5) {
     
     this->devicesArray_ = new int[amount_];
     this->waitFor_ = new double[amount_];
@@ -59,8 +59,7 @@ void Device::free(){
 }
 
 double Device::fxRule(){
-  double lambda = 1.5;
-  return ((-1.0 / lambda)*log((double)rand()/(RAND_MAX)));
+  return ((-1.0 / Lambda)*log((double)rand()/(RAND_MAX)));
 }
 
 int Device::recievePlace(){

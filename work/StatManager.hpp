@@ -25,8 +25,8 @@ public:
   int refusedSize();
   int sentSize();
 
-  void printResult();
-  double statForMultimap(int i, int Flag);
+  void printResult(double time);
+  double statForMultimap(int Flag);
   ~StatManager() = default;
 private:
   int S_;

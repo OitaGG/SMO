@@ -47,7 +47,6 @@ void StatManager::deviceGetFromBuffer(int i, double wait){
 
 void StatManager::deviceDone(int i, double t){
   std::cout<<"Device ----> DONE at time "<<t<<std::endl;
-  // this->pushTimePr(i,t);
   this->sent_.insert(std::make_pair(i,t));  
 }
 
@@ -60,16 +59,16 @@ void StatManager::sourceGenerate(int i, double t){
   this->generated_.insert(std::make_pair(i,t));
 } 
 
-double StatManager::statForMultimap(int i, int Flag){
+double StatManager::statForMultimap(int i){
   std::pair <std::multimap<int,double>::iterator, std::multimap<int,double>::iterator> ret;
-  Flag == 0 ? ret = generated_.equal_range(i) : ret = sent_.equal_range(i); 
+  ret = sent_.equal_range(i); 
   double average = 0.0;
   for(auto it = ret.first; it != ret.second; ++it){
     average += it->second;
   }
   return average;
 }
-void StatManager::printResult(){
+void StatManager::printResult(double time){
   std::cout<<"Requsests value == "<<this->generatedSize()<<std::endl;
   std::cout<<"-----------------------------------"<<std::endl;
   double Kisp = 0;
@@ -80,9 +79,12 @@ void StatManager::printResult(){
     std::cout<<std::fixed<<std::setprecision(2)<<"| Toj: "<<this->timeoj_[i]/(double)this->generated_.count(i);
     std::cout<<std::fixed<<std::setprecision(2)<<"| Tobs: "<<this->timepr_[i]/(double)this->sent_.count(i);
     std::cout<<std::endl;
-    Kisp += timepr_[i];
   }
-  std::cout<<std::fixed<<std::setprecision(2)<<"| Kisp: "<<Kisp<<std::endl;
+  for (size_t i = 0; i < D_; i++){
+    std::cout<<"DEVICE № "<<i;
+    std::cout<<std::fixed<<std::setprecision(2)<<"| Kisp: "<<statForMultimap(i)/time<<std::endl;
+  }
+  
   
   
   std::cout<<"Sent value == "<<this->sentSize()<<std::endl;

@@ -32,6 +32,8 @@ private:
   int* devicesArray_;
   double* waitFor_;
   double* wait_;
+
+  double Lambda;
 };
 
 #endif // !DEVICE_HPP

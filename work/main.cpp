@@ -25,6 +25,6 @@ int main(int argc, char * argv[]) {
 		device.work();
 		timeManager.work();
 	}
-  statManager.printResult();
+  statManager.printResult(timeManager.getCurrentTime());
   return 0;
 }
