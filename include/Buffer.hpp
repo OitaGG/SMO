@@ -12,25 +12,29 @@ public:
   Buffer(TimeManager* timeManager, StatManager* statManager, int N);
 
   void set(int i, double t);
-  int get();
-  bool isReady();
   void force(int i, double t);
+
+  int get();
+  
+  bool isReady();
   bool isEmpty();
+
 
   int getFreePlaceForSet();
   int getPlaceForForce();
   int getPlaceForDevice();
   void clearPlace(int i);
+  
+  // для пошагового режима
   double getBuffInfo(int i);
   int getRequestInBuff(int i);
 
   ~Buffer();
 private:
   int amount_;
-  std::list<int> bufferList_;
-  std::list<double> bufferListTime_;
   int* BufferArray_;
   double* BufferTime_;
+  
   TimeManager* timeManager_;
   StatManager* statManager_;
 };

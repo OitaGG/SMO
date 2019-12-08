@@ -22,18 +22,10 @@ struct StatsTableData
     std::vector<double> K;
 };
 
-struct StepData
-{
-  std::vector<std::string> Events;
-  double *bufferInfo;
-  double *deviceInfo;
-  double currentTime;
-};
-
 class StatManager
 {
 public:
-  StatManager(int F, int S, int D, int B);
+  StatManager(int amount, int sources, int devices, int buffer);
 
   void sourceGenerate(int i, double t);
   void bufferGetFromSource(int i, double t);
@@ -47,10 +39,8 @@ public:
   int refusedSize();
   int sentSize();
 
-  void printResult(double time);
   double statForMultimap(int Flag);
   StatsTableData *getStats(double time);
-  // StepData *getStatus(double currentTime);
   void updateEvents(std::string str);
   std::string getEvents();
   int sizeEvents();

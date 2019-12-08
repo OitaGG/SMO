@@ -12,7 +12,6 @@ public:
 private:
     QTableWidget *tables[2];
     ModulingUnit *unit;
-    // Настройка с двумя кнопками -> они переходят в автоматический режим или в ручной
 };
 
 #endif

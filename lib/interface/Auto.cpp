@@ -4,6 +4,7 @@
 Auto::Auto(int nSources, int nDevices, ModulingUnit *unit)
 {
     this->unit = unit;
+    // запускаем полное моделирование
     unit->fullyModulate();
     StatsTableData *table = unit->getStats();
     QGridLayout *mainLayout = new QGridLayout();

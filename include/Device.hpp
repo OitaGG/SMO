@@ -16,19 +16,24 @@ public:
   void work();
   void get(int i);
   int getFreePlaces();
-  void getTime();
   void free();
   double fxRule();
+  void getTime();
   int recievePlace();
+
   bool done();
+  // для статистики
   double getDevInfo(int i);
+
   ~Device();
 private:
   TimeManager* timeManager_;
   Buffer* buffer_;
   StatManager* statManager_;
+
   int amount_;
   double time_;
+  
   int* devicesArray_;
   double* waitFor_;
   double* wait_;

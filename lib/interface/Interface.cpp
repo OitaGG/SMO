@@ -6,8 +6,7 @@
 #include <QLabel>
 #include <QDebug>
 
-Interface::Interface()
-{
+Interface::Interface(){
     this->initializeButtons();
     this->initializeFormLines();
     QVBoxLayout *layout = new QVBoxLayout;
@@ -16,8 +15,7 @@ Interface::Interface()
     this->setLayout(layout);
 }
 
-void Interface::initializeButtons()
-{
+void Interface::initializeButtons(){
     this->buttonsHolder = new QWidget;
     QHBoxLayout *layout = new QHBoxLayout;
 
@@ -32,8 +30,7 @@ void Interface::initializeButtons()
     buttonsHolder->setLayout(layout);
 }
 
-void Interface::initializeFormLines()
-{
+void Interface::initializeFormLines(){
     this->formGroupBox = new QGroupBox(tr("Настройки"));
     QFormLayout *layout = new QFormLayout;
 
@@ -56,8 +53,7 @@ void Interface::initializeFormLines()
     this->formGroupBox->setLayout(layout);
 }
 
-void Interface::startModuling(bool mode)
-{
+void Interface::startModuling(bool mode){
     int nSources = this->lineEdits[0]->text().toInt();
     int nBuffer = this->lineEdits[1]->text().toInt();
     int nDevices = this->lineEdits[2]->text().toInt();
@@ -68,12 +64,9 @@ void Interface::startModuling(bool mode)
     ModulingUnit *unit = new ModulingUnit(nSources, nBuffer, nDevices, amount, labmda, a, b);
 
     QWidget *goTo;
-    if (mode)
-    {
+    if (mode){
         goTo = new Manual(nSources, nBuffer, nDevices, unit);
-    }
-    else
-    {
+    } else {
         goTo = new Auto(nSources, nDevices, unit);
     }
 

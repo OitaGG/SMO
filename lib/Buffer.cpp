@@ -2,41 +2,49 @@
 
 Buffer::Buffer(TimeManager* timeManager, StatManager* statManager, int N) : timeManager_(timeManager), 
 statManager_(statManager), amount_(N) {
+  // BufferArray_ - индекс это номер буфера, зн-е это номер заявки
   this->BufferArray_ = new int[amount_];
+  // BufferTime_ - индекс - это номер буфера, зн-е это время заявки
   this->BufferTime_ = new double[amount_];
   for (size_t i = 0; i < amount_; i++)
   {
     this->BufferArray_[i] = -1;
     this->BufferTime_[i] = -1;
   }
-  
 }
 
 void Buffer::set(int i, double t){
   int place = this->getFreePlaceForSet();
-  std::cout<<"PLACE "<<place<<std::endl;
+  // ставим на свободное место в буфере заявку и ее время
   BufferArray_[place] = i;
   BufferTime_[place] = t;
+  // отправляем статистику об успешном пуше
   this->statManager_->pushingAmount(place, i);
   this->statManager_->bufferGetFromSource(i,t);
 }
 
 int Buffer::get(){
+  // если буфер не пустой
   if(!this->isEmpty()){
     int place = this->getPlaceForDevice();
+    // берем заявку с указанного места в буфере
     int RequestForDev = this->BufferArray_[place];
     double RequestTime = this->timeManager_->getCurrentTime() - this->BufferTime_[place];
+    // отправляем статистику о времени ожидания
     this->statManager_->pushTimeOj(RequestForDev,RequestTime);
+    // освобождаем место в буфереы
     this->clearPlace(place);
+    // отправляем на девайс номер заявки
     return RequestForDev;
   }
+  // если пустой отправляем на девайс -1
   return(-1);
 }
 
+// есть ли свободные места в буфере
 bool Buffer::isReady(){
   int count = 0;
-  for (size_t i = 0; i < this->amount_; i++)
-  {
+  for (size_t i = 0; i < this->amount_; i++){
     if(this->BufferArray_[i] != -1)
       count++;
   }
@@ -47,16 +55,19 @@ bool Buffer::isReady(){
 
 void Buffer::force(int i, double t){
   int place = this->getPlaceForForce();
-  std::cout<<"Force-place "<<place<<std::endl;
+  // Берем заявку из буфера, которая уходит в отказ по заданному месту
   int forcedRequest = this->BufferArray_[place];
   int forcedTime = this->BufferTime_[place];
+  // форсим ее пришедшой заявкой
   this->BufferArray_[place] = i;
   this->BufferTime_[place] = t;
+  // отправляем статистику о форсе, времени ожидания
   this->statManager_->pushingAmount(place, i);
   this->statManager_->bufferForced(i, forcedRequest);
   this->statManager_->pushTimeOj(forcedRequest,this->timeManager_->getCurrentTime() - forcedTime);
 }
 
+// пустой ли буфер
 bool Buffer::isEmpty(){
   int count = 0;
   for (size_t i = 0; i < amount_; i++)
@@ -69,6 +80,8 @@ bool Buffer::isEmpty(){
   return false;
 }
 
+// ищет первое свободное место в буфере для новой заявки(постановка в порядке поступления)
+// иначе возвращает -1
 int Buffer::getFreePlaceForSet(){
   for (size_t i = 0; i < this->amount_; i++)
   {
@@ -78,6 +91,7 @@ int Buffer::getFreePlaceForSet(){
   return -1;
 }
 
+// ищет заявку, которую будем форсить(самую старую в буфере)
 int Buffer::getPlaceForForce(){
   int place = 0;
   double max = this->BufferTime_[0];
@@ -91,6 +105,7 @@ int Buffer::getPlaceForForce(){
   return place;  
 }
 
+// ищет заявку, которую отправит на девайс(самую новую в буфере)
 int Buffer::getPlaceForDevice(){
   double min = BufferTime_[0];
   int place = 0;
@@ -104,11 +119,13 @@ int Buffer::getPlaceForDevice(){
   return place;
 }
 
+// освобождает место в буфере
 void Buffer::clearPlace(int i){
   this->BufferTime_[i] = -1;
   this->BufferArray_[i] = -1;
 }
 
+// для статистики
 double Buffer::getBuffInfo(int i){
   return BufferTime_[i];
 }
@@ -117,6 +134,7 @@ int Buffer::getRequestInBuff(int i){
   return BufferArray_[i];
 }
 
+// освобождает память
 Buffer::~Buffer(){
   delete[] this->BufferArray_;
   delete[] this->BufferTime_;

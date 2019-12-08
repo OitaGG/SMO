@@ -5,31 +5,30 @@
 #include <QVBoxLayout>
 #include <QFormLayout>
 
-Manual::Manual(int nSources, int nBuffer, int nDevices, ModulingUnit *unit)
-{
+Manual::Manual(int nSources, int nBuffer, int nDevices, ModulingUnit *unit){
     this->unit = unit;
     this->nDev = nDevices;
     this->nBuff = nBuffer;
+
     this->button = new QPushButton(tr("Сделать шаг"));
     QGridLayout *mainLayout = new QGridLayout();
-    
 
+    // таблица для буфера
     this->tables[0] = new QTableWidget(nBuffer, 4);
-    // //Заполнение
     this->tables[0]->setHorizontalHeaderLabels(
         QStringList()<< "Состояние"
         << "Время заявки"
         << "С какого ист."
         << "Кол-во заявок с него");
     mainLayout->addWidget(this->tables[0], 0, 0);
-    for (int i = 0; i < nBuffer; i++)
-    {
+    for (int i = 0; i < nBuffer; i++){
         this->tables[0]->setItem(i, 0, new QTableWidgetItem(tr("%1").arg("Free")));
         this->tables[0]->setItem(i, 1, new QTableWidgetItem(tr("%1").arg("NaN")));
         this->tables[0]->setItem(i, 2, new QTableWidgetItem(tr("%1").arg("NaN")));
         this->tables[0]->setItem(i, 3, new QTableWidgetItem(tr("%1").arg("NaN")));
     }
     
+    // таблица для приборов
     this->tables[1] = new QTableWidget(nDevices, 2);
     this->tables[1]->setHorizontalHeaderLabels(
         QStringList()<< "Состояние"
@@ -41,22 +40,20 @@ Manual::Manual(int nSources, int nBuffer, int nDevices, ModulingUnit *unit)
     }
     mainLayout->addWidget(this->tables[1], 0, 1);
     
-
+    // таблица "Календарь событий"
     this->tables[2] = new QTableWidget(1, 1);
     this->tables[2]->setHorizontalHeaderLabels(
         QStringList()<< "Событие");
-    for (int i = 0; i < nBuffer; i++)
-    {
+    for (int i = 0; i < nBuffer; i++){
         this->tables[2]->setItem(i, 0, new QTableWidgetItem(tr("%1").arg("Nothing")));
     }
     mainLayout->addWidget(this->tables[2],1,0);
 
+    // текущее время и шаг
     this->formGroupBox = new QGroupBox(tr("Текущее состояние"));
     QFormLayout *layout = new QFormLayout;
-
     this->lineEdits[0] = new QLabel("0.0");
     this->lineEdits[1] = new QLabel("0");
-
     layout->addRow(new QLabel(tr("Время:")), this->lineEdits[0]);
     layout->addRow(new QLabel(tr("Шаг:")), this->lineEdits[1]);
 
@@ -75,19 +72,21 @@ Manual::Manual(int nSources, int nBuffer, int nDevices, ModulingUnit *unit)
 void Manual::check()
 {
     this->lineEdits[0]->setText(QString::fromStdString(std::to_string(this->unit->getTime())));
+    // один шаг
     this->unit->singularStep();
+    // обновление таблиц
     this->updateTables();
-    // this->unit->clearEvents();
 }
 
 void Manual::updateTables(){
+    // смотрим количество событий
     int k = unit->getSizeEvents();
+    // устанавливаем количество строк = кол-ву событий и заполняем
     this->tables[2]->setRowCount(k);
-
     for(int i = 0; i < k; i++){
         this->tables[2]->setItem(i, 0, new QTableWidgetItem(tr("%1").arg(QString::fromStdString(this->unit->updateInfo()))));
     }
-
+    // обновляем таблицу приборов
     for (size_t i = 0; i < this->nDev; i++){
         double tmp = this->unit->getDevInfo(i);
         if(tmp == -1){
@@ -98,7 +97,7 @@ void Manual::updateTables(){
             this->tables[1]->setItem(i, 1, new QTableWidgetItem(tr("%1").arg(QString::fromStdString(std::to_string(tmp)))));
         }
     }
-
+    // обновляем таблицу буфера
     for (size_t i = 0; i < this->nBuff; i++){
         double tmp = this->unit->getBuffInfo(i);
         std::cout<<"TMP"<<tmp<<std::endl;
