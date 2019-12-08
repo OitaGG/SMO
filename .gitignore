@@ -3,3 +3,6 @@
 *.stash
 *.pro
 Makefile
+main
+MySMO
+.gitignore
