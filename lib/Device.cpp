@@ -1,7 +1,7 @@
-#include "Device.hpp"
+#include "../include/Device.hpp"
 
-Device::Device(TimeManager* timeManager, Buffer* buffer, StatManager* statManager, int N) : timeManager_(timeManager), 
-    buffer_(buffer), statManager_(statManager), amount_(N), time_(0.0), Lambda(1.5) {
+Device::Device(TimeManager* timeManager, Buffer* buffer, StatManager* statManager, int N, double Lambda) : timeManager_(timeManager), 
+    buffer_(buffer), statManager_(statManager), amount_(N), time_(0.0), Lambda_(Lambda) {
     
     this->devicesArray_ = new int[amount_];
     this->waitFor_ = new double[amount_];
@@ -17,6 +17,7 @@ Device::Device(TimeManager* timeManager, Buffer* buffer, StatManager* statManage
 void Device::get(int i){
   for(size_t k = 0; k < i; k++){
     int numS = this->buffer_->get();
+    std::cout<<"TO DEVICE"<<numS<<std::endl;
     if(numS == -1)
       return;
     int place = this->recievePlace();
@@ -32,7 +33,7 @@ void Device::get(int i){
 
 int Device::getFreePlaces(){
   int count = 0;
-  for(int i = 0; i < amount_; i++){
+  for(int i = 0; i < this->amount_; i++){
     if(this->devicesArray_[i] == -1){
       count++;
     }
@@ -59,7 +60,7 @@ void Device::free(){
 }
 
 double Device::fxRule(){
-  return ((-1.0 / Lambda)*log((double)rand()/(RAND_MAX)));
+  return ((-1.0 / Lambda_)*log((double)rand()/(RAND_MAX)));
 }
 
 int Device::recievePlace(){
@@ -72,11 +73,6 @@ int Device::recievePlace(){
   }
   return place;
 }
-Device::~Device(){
-  delete this->devicesArray_;
-  delete this->waitFor_;
-  delete this->wait_;
-}
 
 bool Device::done(){
   int count = 0;
@@ -87,4 +83,14 @@ bool Device::done(){
   if(count == this->amount_)
     return true;
   return false;
+}
+
+double Device::getDevInfo(int i){
+  return wait_[i];
+}
+
+Device::~Device(){
+  delete[] this->devicesArray_;
+  delete[] this->wait_;
+  delete[] this->waitFor_;
 }

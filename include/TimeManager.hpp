@@ -1,7 +1,7 @@
 #ifndef TIMEMANAGER_HPP
 #define TIMEMANAGER_HPP
 
-#include "StatManager.hpp"
+#include "./StatManager.hpp"
 #include <list>
 #include <iostream>
 

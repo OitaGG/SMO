@@ -1,9 +1,9 @@
 #ifndef DEVICE_HPP
 #define DEVICE_HPP
 
-#include "Buffer.hpp"
-#include "TimeManager.hpp"
-#include "StatManager.hpp"
+#include "./Buffer.hpp"
+#include "./TimeManager.hpp"
+#include "./StatManager.hpp"
 #include <math.h>
 #include <cmath>
 #include <iostream>
@@ -11,7 +11,7 @@
 class Device
 {
 public:
-  Device(TimeManager* timeManager, Buffer* buffer, StatManager* statManager, int N);
+  Device(TimeManager* timeManager, Buffer* buffer, StatManager* statManager, int N, double Lambda);
 
   void work();
   void get(int i);
@@ -21,8 +21,8 @@ public:
   double fxRule();
   int recievePlace();
   bool done();
-
-  ~Device();  
+  double getDevInfo(int i);
+  ~Device();
 private:
   TimeManager* timeManager_;
   Buffer* buffer_;
@@ -33,7 +33,7 @@ private:
   double* waitFor_;
   double* wait_;
 
-  double Lambda;
+  double Lambda_;
 };
 
 #endif // !DEVICE_HPP

@@ -1,8 +1,8 @@
 #ifndef BUFFER_HPP
 #define BUFFER_HPP
 
-#include "TimeManager.hpp"
-#include "StatManager.hpp"
+#include "./TimeManager.hpp"
+#include "./StatManager.hpp"
 #include <list>
 #include <iostream>
 
@@ -17,12 +17,20 @@ public:
   void force(int i, double t);
   bool isEmpty();
 
+  int getFreePlaceForSet();
+  int getPlaceForForce();
+  int getPlaceForDevice();
+  void clearPlace(int i);
+  double getBuffInfo(int i);
+  int getRequestInBuff(int i);
 
-  ~Buffer() = default;
+  ~Buffer();
 private:
   int amount_;
   std::list<int> bufferList_;
   std::list<double> bufferListTime_;
+  int* BufferArray_;
+  double* BufferTime_;
   TimeManager* timeManager_;
   StatManager* statManager_;
 };

@@ -1,9 +1,9 @@
 #ifndef SOURCE_HPP
 #define SOURCE_HPP
 
-#include "Buffer.hpp"
-#include "TimeManager.hpp"
-#include "StatManager.hpp"
+#include "./Buffer.hpp"
+#include "./TimeManager.hpp"
+#include "./StatManager.hpp"
 #include <math.h>
 #include <iostream>
 #include <cmath>
@@ -11,7 +11,7 @@
 class Source
 {
 public:
-  Source(TimeManager* timeManager, Buffer* buffer, StatManager* statManager, int N);
+  Source(TimeManager* timeManager, Buffer* buffer, StatManager* statManager, int N, double a, double b);
   
   void generate();
   void send(int i, double t);
@@ -21,8 +21,8 @@ public:
   void free(int i);
   void work();
   void check();
-  bool done();
-  
+  bool done();  
+
   ~Source();
 private:
   TimeManager* timeManager;

@@ -1,4 +1,4 @@
-#include "TimeManager.hpp"
+#include "../include/TimeManager.hpp"
 
 TimeManager::TimeManager(int amount, StatManager* statManager) : sourcesAmount_(amount), 
   statManager_(statManager), currentTime_(0.0) {
