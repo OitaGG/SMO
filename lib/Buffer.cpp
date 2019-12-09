@@ -19,7 +19,6 @@ void Buffer::set(int i, double t){
   BufferArray_[place] = i;
   BufferTime_[place] = t;
   // отправляем статистику об успешном пуше
-  this->statManager_->pushingAmount(place, i);
   this->statManager_->bufferGetFromSource(i,t);
 }
 
@@ -62,7 +61,7 @@ void Buffer::force(int i, double t){
   this->BufferArray_[place] = i;
   this->BufferTime_[place] = t;
   // отправляем статистику о форсе, времени ожидания
-  this->statManager_->pushingAmount(place, i);
+  // this->statManager_->pushingAmount(place, i);
   this->statManager_->bufferForced(i, forcedRequest);
   this->statManager_->pushTimeOj(forcedRequest,this->timeManager_->getCurrentTime() - forcedTime);
 }
@@ -83,19 +82,22 @@ bool Buffer::isEmpty(){
 // ищет первое свободное место в буфере для новой заявки(постановка в порядке поступления)
 // иначе возвращает -1
 int Buffer::getFreePlaceForSet(){
+  int index = 0;
   for (size_t i = 0; i < this->amount_; i++)
   {
-    if(this->BufferArray_[i] == -1)
-      return i;
+    if(this->BufferArray_[i] == -1){
+      index = i;
+      break;
+    }
   }
-  return -1;
+  return index;
 }
 
 // ищет заявку, которую будем форсить(самую старую в буфере)
 int Buffer::getPlaceForForce(){
   int place = 0;
   double max = this->BufferTime_[0];
-  for (size_t i = 0; i < amount_; i++)
+  for (size_t i = 0; i < this->amount_; i++)
   {
     if(this->BufferTime_[i] > max){
       max = this->BufferTime_[i];
@@ -109,7 +111,7 @@ int Buffer::getPlaceForForce(){
 int Buffer::getPlaceForDevice(){
   double min = BufferTime_[0];
   int place = 0;
-  for (size_t i = 0; i < amount_; i++)
+  for (size_t i = 0; i < this->amount_; i++)
   {
     if(this->BufferTime_[i] < min && this->BufferArray_[i] != -1){
       min = this->BufferTime_[i];
@@ -136,6 +138,6 @@ int Buffer::getRequestInBuff(int i){
 
 // освобождает память
 Buffer::~Buffer(){
-  delete[] this->BufferArray_;
-  delete[] this->BufferTime_;
+//  delete[] this->BufferArray_;
+//  delete[] this->BufferTime_;
 }

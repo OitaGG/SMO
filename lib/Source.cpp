@@ -26,7 +26,6 @@ void Source::generate(){
 
 void Source::check(){
   for(size_t i = 0; i < this->amount_; i++){
-    std::cout<<this->time_<<std::endl;
     if(this->sourcesArray_[i] == this->time_){
       this->send(i, this->sourcesArray_[i]);
       this->free(i);
@@ -77,5 +76,5 @@ bool Source::done(){
 
 // освобождаем память
 Source::~Source(){
-  delete[] this->sourcesArray_;
+//  delete[] this->sourcesArray_;
 }

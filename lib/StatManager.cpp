@@ -163,10 +163,10 @@ void StatManager::pushingAmount(int i, int k){
 
 // освобождаем память
 StatManager::~StatManager(){
-  delete[] this->refused_;
-  delete[] this->timeoj_;
-  delete[] this->timepr_;
-  delete[] this->squaredTimeoj_;
-  delete[] this->squaredTimepr_;
-  delete[] this->amountOnBuffers;
+//  delete[] this->refused_;
+//  delete[] this->timeoj_;
+//  delete[] this->timepr_;
+//  delete[] this->squaredTimeoj_;
+//  delete[] this->squaredTimepr_;
+//  delete[] this->amountOnBuffers;
 }

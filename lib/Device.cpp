@@ -9,7 +9,7 @@ Device::Device(TimeManager* timeManager, Buffer* buffer, StatManager* statManage
     this->waitFor_ = new double[amount_];
     this->wait_ = new double[amount_];
 
-    for(size_t i = 0; i < amount_; i++){
+    for(size_t i = 0; i < this->amount_; i++){
       this->devicesArray_[i] = -1;
       this->waitFor_[i] = -1;
       this->wait_[i] = -1;
@@ -31,7 +31,6 @@ void Device::get(int i){
     // отправляем статистику об успешной постановке на прибор и добавляем новое время в календарь
     this->statManager_->deviceGetFromBuffer(numS, waitFor_[place]);
     this->timeManager_->addNewTime(waitFor_[place]);
-    this->getFreePlaces();
   }
 }
 
@@ -76,7 +75,7 @@ double Device::fxRule(){
 // находим свободный прибор, на который поставим заявку
 int Device::recievePlace(){
   int place = -1;
-  for (size_t i = 0; i < amount_; i++){
+  for (size_t i = 0; i < this->amount_; i++){
     if(devicesArray_[i] == -1){
       place = i;
       break;
@@ -88,7 +87,7 @@ int Device::recievePlace(){
 // обслужили ли все приборы свои заявки
 bool Device::done(){
   int count = 0;
-  for(size_t i = 0; i < amount_; i++){
+  for(size_t i = 0; i < this->amount_; i++){
     if(this->devicesArray_[i] == -1) 
       count++;
   }
@@ -104,7 +103,7 @@ double Device::getDevInfo(int i){
 
 // освобождение памяти
 Device::~Device(){
-  delete[] this->devicesArray_;
-  delete[] this->wait_;
-  delete[] this->waitFor_;
+  // delete[] this->devicesArray_;
+  // delete[] this->wait_;
+  // delete[] this->waitFor_;
 }

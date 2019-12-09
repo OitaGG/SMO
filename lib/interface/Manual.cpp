@@ -86,7 +86,7 @@ void Manual::updateTables(){
     for(int i = 0; i < k; i++){
         this->tables[2]->setItem(i, 0, new QTableWidgetItem(tr("%1").arg(QString::fromStdString(this->unit->updateInfo()))));
     }
-    // обновляем таблицу приборов
+//     обновляем таблицу приборов
     for (size_t i = 0; i < this->nDev; i++){
         double tmp = this->unit->getDevInfo(i);
         if(tmp == -1){
@@ -97,7 +97,7 @@ void Manual::updateTables(){
             this->tables[1]->setItem(i, 1, new QTableWidgetItem(tr("%1").arg(QString::fromStdString(std::to_string(tmp)))));
         }
     }
-    // обновляем таблицу буфера
+//     обновляем таблицу буфера
     for (size_t i = 0; i < this->nBuff; i++){
         double tmp = this->unit->getBuffInfo(i);
         std::cout<<"TMP"<<tmp<<std::endl;

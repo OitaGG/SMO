@@ -26,7 +26,6 @@ void ModulingUnit::fullyModulate()
 
 StatsTableData *ModulingUnit::getStats()
 {
-    // this->statManager->printResult(this->timeManager->getCurrentTime());
     return this->statManager->getStats(this->timeManager->getCurrentTime());
 }
 
