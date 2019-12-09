@@ -5,15 +5,9 @@ Device::Device(TimeManager* timeManager, Buffer* buffer, StatManager* statManage
     // devicesArray_ - индекс это номер прибора, зн-е - номер заявки
     // waitFor_ - индекс - это номер прибора, зн-е - время, когда заявки зарезолвиться
     // wait_ - индекс - это номер прибора, зн-е - время на приборе
-    this->devicesArray_ = new int[amount_];
-    this->waitFor_ = new double[amount_];
-    this->wait_ = new double[amount_];
-
-    for(size_t i = 0; i < this->amount_; i++){
-      this->devicesArray_[i] = -1;
-      this->waitFor_[i] = -1;
-      this->wait_[i] = -1;
-    }
+    this->devicesArray_ = std::vector<int>(this->amount_, -1);
+    this->waitFor_ = std::vector<double>(this->amount_, -1);
+    this->wait_ = std::vector<double>(this->amount_, -1);
 }
 
 void Device::get(int i){

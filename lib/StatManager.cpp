@@ -3,26 +3,16 @@
 
 StatManager::StatManager(int amount, int sources, int devices, int buffer) : F_(amount), S_(sources), D_(devices), B_(buffer) {
   // refused - индекс это номер источника, зн-е - кол-во отклоненных
-  this->refused_ = new int[this->S_];
+  this->refused_ = std::vector<int>(this->S_, 0);
   // timeoj_ - индекс - это номер источника, зн-е - время ожидания
-  this->timeoj_ = new double[this->S_];
+  this->timeoj_ = std::vector<double>(this->S_, 0);
   // timepr_ - индекс - это номер источника, зн-е - время на приборе
-  this->timepr_ = new double[this->S_];
+  this->timepr_ = std::vector<double>(this->S_, 0);
   // squaredTimeoj_ - индекс - это номер источника, зн-е - сумма квадратов времени ожидания
-  this->squaredTimeoj_ = new double[this->S_];
+  this->squaredTimeoj_ = std::vector<double>(this->S_, 0);
   // squaredTimepr_ - индекс - это номер источника, зн-е - сумма квадратов времени на приборе
-  this->squaredTimepr_ = new double[this->S_];
-  this->amountOnBuffers = new int[this->B_];
-  for (size_t i = 0; i < this->B_; i++){
-    this->amountOnBuffers = 0;
-  }
-  for (size_t i = 0; i < this->S_; i++){
-    this->refused_[i] = 0;
-    this->timeoj_[i] = 0;
-    this->timepr_[i] = 0;
-    this->squaredTimeoj_[i] = 0;
-    this->squaredTimepr_[i] = 0;
-  }
+  this->squaredTimepr_ = std::vector<double>(this->S_, 0);
+  this->amountOnBuffers_ = std::vector<int>(this->B_,0);
   // 1 зн-е - заявка, 2 - время
   this->generated_ = std::multimap<int,double>();
   this->sent_ = std::multimap<int,double>();
@@ -62,21 +52,18 @@ int StatManager::refusedSize(){
 // буфер получил заявку с источника
 void StatManager::bufferGetFromSource(int i, double t){
   std::string str = "Buffer get from Source №" + std::to_string(i);
-  std::cout<<str<<std::endl;
   this->Events_.push_back(str);
 }
 
 // прибор забрал заявку с буфера
 void StatManager::deviceGetFromBuffer(int i, double wait){
   std::string str = "Device get from Buffer with Source №" + std::to_string(i);
-  std::cout<<str<<std::endl;
   this->Events_.push_back(str);
 }
 
 // прибор зарезолвил заявку
 void StatManager::deviceDone(int i, double t){
   std::string str = "Device №" + std::to_string(i) +" done";
-  std::cout<<str<<std::endl;
   this->Events_.push_back(str);
   // по номеру заявки, вставляем зн-е времени
   this->sent_.insert(std::make_pair(i,t));  
@@ -85,7 +72,6 @@ void StatManager::deviceDone(int i, double t){
 // заявку зафорсили
 void StatManager::bufferForced(int i, int k){ 
   std::string str = "Buffer get from Source № " + std::to_string(i) + "and forced it instead " + std::to_string(k);
-  std::cout<<str<<std::endl;
   this->Events_.push_back(str);
   this->refused_[k]++;
 }
@@ -94,7 +80,6 @@ void StatManager::bufferForced(int i, int k){
 void StatManager::sourceGenerate(int i, double t){
   this->generated_.insert(std::make_pair(i,t));
   std::string str = "Source " + std::to_string(i) + " generated"; 
-  std::cout<<str<<std::endl;
   this->Events_.push_back(str);
 } 
 

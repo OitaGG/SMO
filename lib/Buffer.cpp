@@ -1,16 +1,15 @@
 #include "../include/Buffer.hpp"
+#include <limits>
+#include <cstddef>
 
 Buffer::Buffer(TimeManager* timeManager, StatManager* statManager, int N) : timeManager_(timeManager), 
 statManager_(statManager), amount_(N) {
   // BufferArray_ - индекс это номер буфера, зн-е это номер заявки
-  this->BufferArray_ = new int[amount_];
+  this->BufferArray_ = std::vector<int>(this->amount_, -1);
+  // this->BufferArray_ = new int[amount_];
   // BufferTime_ - индекс - это номер буфера, зн-е это время заявки
-  this->BufferTime_ = new double[amount_];
-  for (size_t i = 0; i < amount_; i++)
-  {
-    this->BufferArray_[i] = -1;
-    this->BufferTime_[i] = -1;
-  }
+  // this->BufferTime_ = new double[amount_];
+  this->BufferTime_ = std::vector<double>(this->amount_, -1);
 }
 
 void Buffer::set(int i, double t){
@@ -26,6 +25,8 @@ int Buffer::get(){
   // если буфер не пустой
   if(!this->isEmpty()){
     int place = this->getPlaceForDevice();
+    if(place == -1)
+      return -1;
     // берем заявку с указанного места в буфере
     int RequestForDev = this->BufferArray_[place];
     double RequestTime = this->timeManager_->getCurrentTime() - this->BufferTime_[place];
@@ -69,9 +70,8 @@ void Buffer::force(int i, double t){
 // пустой ли буфер
 bool Buffer::isEmpty(){
   int count = 0;
-  for (size_t i = 0; i < amount_; i++)
-  {
-    if(BufferArray_[i] == -1)
+  for (size_t i = 0; i < this->amount_; i++){
+    if(this->BufferArray_[i] == -1 && this->BufferTime_[i] == -1)
       count++;
   }
   if(count == this->amount_)
@@ -83,8 +83,7 @@ bool Buffer::isEmpty(){
 // иначе возвращает -1
 int Buffer::getFreePlaceForSet(){
   int index = 0;
-  for (size_t i = 0; i < this->amount_; i++)
-  {
+  for (size_t i = 0; i < this->amount_; i++){
     if(this->BufferArray_[i] == -1){
       index = i;
       break;
@@ -109,11 +108,10 @@ int Buffer::getPlaceForForce(){
 
 // ищет заявку, которую отправит на девайс(самую новую в буфере)
 int Buffer::getPlaceForDevice(){
-  double min = BufferTime_[0];
-  int place = 0;
-  for (size_t i = 0; i < this->amount_; i++)
-  {
-    if(this->BufferTime_[i] < min && this->BufferArray_[i] != -1){
+  double min = std::numeric_limits<double>::max();
+  int place = -1;
+  for (size_t i = 0; i < this->amount_; i++){
+    if(this->BufferTime_[i] < min && this->BufferArray_[i] != -1 && this->BufferTime_[i] != -1){
       min = this->BufferTime_[i];
       place = i;
     }
@@ -123,7 +121,7 @@ int Buffer::getPlaceForDevice(){
 
 // освобождает место в буфере
 void Buffer::clearPlace(int i){
-  this->BufferTime_[i] = -1;
+  this->BufferTime_[i] = -1.0;
   this->BufferArray_[i] = -1;
 }
 
@@ -134,10 +132,4 @@ double Buffer::getBuffInfo(int i){
 
 int Buffer::getRequestInBuff(int i){
   return BufferArray_[i];
-}
-
-// освобождает память
-Buffer::~Buffer(){
-//  delete[] this->BufferArray_;
-//  delete[] this->BufferTime_;
 }

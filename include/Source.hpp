@@ -7,7 +7,7 @@
 #include <math.h>
 #include <iostream>
 #include <cmath>
-
+#include <vector>
 class Source
 {
 public:
@@ -29,7 +29,7 @@ private:
   Buffer* buffer_;
   StatManager* statManager_;
   int sourceNumber_;
-  double* sourcesArray_;
+  std::vector<double> sourcesArray_;
   int amount_;
   double time_;
   double Lambda, Betta;

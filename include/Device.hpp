@@ -7,6 +7,7 @@
 #include <math.h>
 #include <cmath>
 #include <iostream>
+#include <vector>
 
 class Device
 {
@@ -34,9 +35,10 @@ private:
   int amount_;
   double time_;
   
-  int* devicesArray_;
-  double* waitFor_;
-  double* wait_;
+  std::vector<int> devicesArray_;
+  std::vector<double> waitFor_;
+  std::vector<double> wait_;
+
 
   double Lambda_;
 };

@@ -55,12 +55,12 @@ private:
   int B_;
   std::multimap<int,double> generated_;
   std::multimap<int,double> sent_;
-  double* timeoj_;
-  double* squaredTimeoj_;
-  double* timepr_;
-  double* squaredTimepr_;
-  int* refused_;
-  int* amountOnBuffers;
+  std::vector<double> timeoj_;
+  std::vector<double> squaredTimeoj_;
+  std::vector<double> timepr_;
+  std::vector<double> squaredTimepr_;
+  std::vector<int> refused_;
+  std::vector<int> amountOnBuffers_;
   int F_;
   std::list<std::string> Events_;
 };

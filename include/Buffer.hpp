@@ -5,6 +5,7 @@
 #include "./StatManager.hpp"
 #include <list>
 #include <iostream>
+#include <vector>
 
 class Buffer
 {
@@ -29,11 +30,10 @@ public:
   double getBuffInfo(int i);
   int getRequestInBuff(int i);
 
-  ~Buffer();
 private:
   int amount_;
-  int* BufferArray_;
-  double* BufferTime_;
+  std::vector<int> BufferArray_;
+  std::vector<double> BufferTime_;
   
   TimeManager* timeManager_;
   StatManager* statManager_;
