@@ -10,6 +10,7 @@ statManager_(statManager), amount_(N) {
   // BufferTime_ - индекс - это номер буфера, зн-е это время заявки
   // this->BufferTime_ = new double[amount_];
   this->BufferTime_ = std::vector<double>(this->amount_, -1);
+  this->previouslyTime_ = 0;
 }
 
 void Buffer::set(int i, double t){
@@ -132,4 +133,16 @@ double Buffer::getBuffInfo(int i){
 
 int Buffer::getRequestInBuff(int i){
   return BufferArray_[i];
+}
+
+double Buffer::getTimeInBuff(int i){
+  if(this->BufferTime_[i] != -1){
+    double timeOj = this->previouslyTime_ - this->BufferTime_[i];
+    return timeOj;
+  }
+  return (-1);
+}
+
+double Buffer::updatePreviouslyTime(){
+  this->previouslyTime_ = this->timeManager_->getCurrentTime();
 }

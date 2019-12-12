@@ -29,9 +29,12 @@ public:
   // для пошагового режима
   double getBuffInfo(int i);
   int getRequestInBuff(int i);
+  double getTimeInBuff(int i);
+  double updatePreviouslyTime();
 
 private:
   int amount_;
+  double previouslyTime_;
   std::vector<int> BufferArray_;
   std::vector<double> BufferTime_;
   

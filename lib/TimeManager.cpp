@@ -17,9 +17,9 @@ void TimeManager::addNewTime(double i){
 
 // сгенерировались ли все заявки
 bool TimeManager::done(){
-  if(statManager_->generatedSize() < this->sourcesAmount_)
-    return false;
-  return true;
+  if(this->statManager_->getRequestValue() >= this->sourcesAmount_)
+    return true;
+  return false;
 }
 
 // проход по календарю

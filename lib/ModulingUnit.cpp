@@ -29,17 +29,18 @@ StatsTableData *ModulingUnit::getStats()
     return this->statManager->getStats(this->timeManager->getCurrentTime());
 }
 
-void ModulingUnit::singularStep()
+bool ModulingUnit::singularStep()
 {
     if(!(this->timeManager->done()) || !this->source->done() || !this->buffer->isEmpty() || !this->device->done())
     {
         this->source->work();
         this->device->work();
+        this->buffer->updatePreviouslyTime();
         this->timeManager->work();
         // this->updateInfo();
-    } else {
-        // this->statManager->printResult(this->timeManager->getCurrentTime());
+        return true;
     }
+    return false;
 }
 
 std::string ModulingUnit::updateInfo(){
@@ -68,4 +69,23 @@ double ModulingUnit::getBuffInfo(int i){
 
 int ModulingUnit::getRequestInBuff(int i){
     return buffer->getRequestInBuff(i);
+}
+
+std::string ModulingUnit::getTimeInBuff(int i){
+    double time = this->buffer->getTimeInBuff(i);
+    if(time != -1)
+        return std::to_string(time);
+    return "Nan";
+}
+
+int ModulingUnit::getRequestValue(){
+    return statManager->getRequestValue();
+}
+
+int ModulingUnit::getSentValue(){
+    return statManager->getSentValue();
+}
+
+int ModulingUnit::getWorkedTasksForDevice(int i){
+    return this->statManager->deviceWorkedWithGet(i);
 }

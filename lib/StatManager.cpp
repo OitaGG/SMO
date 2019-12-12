@@ -12,12 +12,15 @@ StatManager::StatManager(int amount, int sources, int devices, int buffer) : F_(
   this->squaredTimeoj_ = std::vector<double>(this->S_, 0);
   // squaredTimepr_ - индекс - это номер источника, зн-е - сумма квадратов времени на приборе
   this->squaredTimepr_ = std::vector<double>(this->S_, 0);
-  this->amountOnBuffers_ = std::vector<int>(this->B_,0);
+  this->generatedCount_ = std::vector<int>(this->S_,0);
+  this->generatedTime_ = std::vector<double>(this->S_, 0);
   // 1 зн-е - заявка, 2 - время
   this->generated_ = std::multimap<int,double>();
   this->sent_ = std::multimap<int,double>();
+  this->workedTime_ = std::vector<double>(this->D_, 0);
   // для статистики
   this->Events_ = std::list<std::string>();
+  this->deviceWorkedTasks_ = std::vector<int>(this->D_,0);
 }
 
 // пушим время на приборе и его квадрат для дисперсии
@@ -62,10 +65,11 @@ void StatManager::deviceGetFromBuffer(int i, double wait){
 }
 
 // прибор зарезолвил заявку
-void StatManager::deviceDone(int i, double t){
+void StatManager::deviceDone(int i,int j, double t){
   std::string str = "Device №" + std::to_string(i) +" done";
   this->Events_.push_back(str);
   // по номеру заявки, вставляем зн-е времени
+  this->workedTime_[j] += t;
   this->sent_.insert(std::make_pair(i,t));  
 }
 
@@ -78,6 +82,8 @@ void StatManager::bufferForced(int i, int k){
 
 // заявка сгенерировалась
 void StatManager::sourceGenerate(int i, double t){
+  this->generatedCount_[i] += 1;
+  this->generatedTime_[i] += t;
   this->generated_.insert(std::make_pair(i,t));
   std::string str = "Source " + std::to_string(i) + " generated"; 
   this->Events_.push_back(str);
@@ -96,18 +102,27 @@ double StatManager::statForMultimap(int i){
 // статистика для автоматического режима
 StatsTableData *StatManager::getStats(double time){
   StatsTableData *toGive = new StatsTableData();
+    double fail = 0;
+    double procc = 0;
+    double timein = 0;
     for (int i = 0; i < this->S_; i++){
-        toGive->N.push_back(this->generated_.count(i));
+        toGive->N.push_back(this->generatedCount_[i]);
         toGive->failureProb.push_back((double)this->refused_[i]/(double)this->generated_.count(i));
+        fail += (double)this->refused_[i]/(double)this->generated_.count(i);
         toGive->avgTimeBeing.push_back((this->timeoj_[i] + this->timepr_[i])/(double)this->generated_.count(i));
+        timein += (this->timeoj_[i] + this->timepr_[i])/(double)this->generated_.count(i);
         toGive->avgTimeWaiting.push_back(this->timeoj_[i]/(double)this->generated_.count(i));
         toGive->avgTimeProccessing.push_back(this->timepr_[i]/(double)this->sent_.count(i));
         toGive->dispTimeBeing.push_back(this->dispTimeBeing(i));
         toGive->dispTimeProccessing.push_back(dispTimeProcessing(i));
     }
     for (int i = 0; i < D_; i++){
-        toGive->K.push_back(statForMultimap(i)/time);
+        toGive->K.push_back(workedTime_[i]/time);
+        procc += workedTime_[i]/time;
     }
+    std::cout<<"Отказ"<<fail/this->S_<<std::endl;
+    std::cout<<"Коэф занятости"<<procc/this->D_<<std::endl;
+    std::cout<<"Время в системе"<<timein/this->S_<<std::endl;
     return toGive;
 }
 // для подсчета статистики
@@ -142,16 +157,26 @@ int StatManager::sizeEvents(){
   return Events_.size();
 }
 
-void StatManager::pushingAmount(int i, int k){
-  // this->amountOnBuffers[i] 
+int StatManager::getRequestValue(){
+  double count = 0;
+  for (size_t i = 0; i < this->S_; i++){
+    count += generatedCount_[i];
+  }
+  return count;
 }
 
-// освобождаем память
-StatManager::~StatManager(){
-//  delete[] this->refused_;
-//  delete[] this->timeoj_;
-//  delete[] this->timepr_;
-//  delete[] this->squaredTimeoj_;
-//  delete[] this->squaredTimepr_;
-//  delete[] this->amountOnBuffers;
+int StatManager::getSentValue(){
+  return this->sent_.size();
+}
+
+int StatManager::getRequestAmount(){
+  return this->F_;
+}
+
+void StatManager::deviceWorkedWithUpdate(int i){
+  this->deviceWorkedTasks_[i] += 1;
+}
+
+int StatManager::deviceWorkedWithGet(int i){
+  return this->deviceWorkedTasks_[i];
 }

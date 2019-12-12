@@ -52,8 +52,9 @@ void Device::free(){
   for (size_t i = 0; i < this->amount_; i++){
     if(this->waitFor_[i] == this->time_){
       // отправляем статистику об успешном резолве заявки, пушим время на приборе
-      this->statManager_->deviceDone(this->devicesArray_[i],this->wait_[i]);
+      this->statManager_->deviceDone(this->devicesArray_[i],i, this->wait_[i]);
       this->statManager_->pushTimePr(this->devicesArray_[i], this->wait_[i]);
+      this->statManager_->deviceWorkedWithUpdate(i);
       // очищаем прибор
       this->devicesArray_[i] = -1;
       this->waitFor_[i] = -1;

@@ -33,6 +33,7 @@ private:
   int amount_;
   double time_;
   double Lambda, Betta;
+  int currentAmount_;
 };
 
 #endif // !SOURCE_HPP

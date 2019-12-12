@@ -25,7 +25,7 @@ private:
 
 public:
     ModulingUnit(int nSources, int nBuffer, int nDevices, int amount, double labmda, double a, double b);
-    void singularStep();
+    bool singularStep();
     StatsTableData *getStats();
     void fullyModulate();
     std::string updateInfo();
@@ -35,6 +35,10 @@ public:
     double getDevInfo(int i);
     double getBuffInfo(int i);
     int getRequestInBuff(int i);
+    int getRequestValue();
+    int getSentValue();
+    int getWorkedTasksForDevice(int i);
+    std::string getTimeInBuff(int i);
 };
 
 #endif // MODULING_UNIT

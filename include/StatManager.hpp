@@ -31,7 +31,7 @@ public:
   void bufferGetFromSource(int i, double t);
   void bufferForced(int i, int k);
   void deviceGetFromBuffer(int i, double wait);
-  void deviceDone(int i, double t);
+  void deviceDone(int i, int j, double t);
   void pushTimeOj(int k,double t);
   void pushTimePr(int k, double t);
 
@@ -47,12 +47,17 @@ public:
   void clearEvents();
   double dispTimeBeing(int i);
   double dispTimeProcessing(int i);
-  void pushingAmount(int i, int k);
+  int getRequestValue();
+  int getSentValue();
+  int getRequestAmount();
+  void deviceWorkedWithUpdate(int i);
+  int deviceWorkedWithGet(int i);
   ~StatManager();
 private:
   int S_;
   int D_;
   int B_;
+  std::vector<double> workedTime_;
   std::multimap<int,double> generated_;
   std::multimap<int,double> sent_;
   std::vector<double> timeoj_;
@@ -60,7 +65,9 @@ private:
   std::vector<double> timepr_;
   std::vector<double> squaredTimepr_;
   std::vector<int> refused_;
-  std::vector<int> amountOnBuffers_;
+  std::vector<int> generatedCount_;
+  std::vector<double> generatedTime_;
+  std::vector<int> deviceWorkedTasks_;
   int F_;
   std::list<std::string> Events_;
 };
